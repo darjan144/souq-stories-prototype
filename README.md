@@ -1,5 +1,7 @@
 # Souq Stories — app prototype
 
+**Live web prototype:** https://darjan144.github.io/souq-stories-prototype/ (register with any number, code `1234`)
+
 React Native (Expo SDK 58, TypeScript, Expo Router). Front-end only: mock data in `src/data`, progress stored on the device. The same code runs on phones (Expo Go) and on the web (GitHub Pages).
 
 ## Run it
