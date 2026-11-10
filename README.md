@@ -15,15 +15,27 @@ Register with any name and number; the OTP is any 4 digits (e.g. `1234`).
 
 > Expo Go must support SDK 58. If the store version of Expo Go on a phone says the project is incompatible, update Expo Go or use the web build.
 
-## Demo script (about 2 minutes)
-1. Register, then enter code `1234`.
-2. **Explore**: tap a pin on the Souq Al Jubail map → *Meet the owner*.
-3. **Story**: tap play (placeholder preview with auto-subtitles) → story card collected.
-4. Reserve an **Evening Souq Pick** → code appears in Wallet → *Shop confirms pickup* → "+25, you saved 1 kg of good food".
-5. **Scan** the printed shop QR (Profile → Demo tools → QR sheet) or tap a demo scan → +10, badge, challenge progress.
-6. Profile → Demo tools → *Set Souq Week to 2/3*, then scan another shop → challenge complete → coupon.
-7. **Wallet** → coupon QR → *Simulate shop confirmation*.
-8. **Profile / Impact**, then **Shop view** (owner dashboard with the sales uplift and the WhatsApp "post Souq Picks" mock).
+## How visits and purchases work
+Each shop has **two printed QR codes that never change** (Profile → Demo tools → QR sheet):
+- **Visit QR** at the stall front: small points (+5) and badges. Never coupons.
+- **Purchase QR** at the owner's counter: scanned after tasting, haggling and agreeing a price. It creates a *pending* purchase. The owner gets a WhatsApp message and taps **Confirm sale**, optionally choosing a price band (under 20 / 20–50 / 50–100 / 100+ AED). Only confirmed purchases count (+25, +10 for a first purchase at a shop) and only they unlock coupons.
+
+We measure the **act of buying through the app**, not exact money (prices are haggled, cash is common). Spend is estimated from optional price bands and reported with its coverage.
+Coupons are never percentages: a **fixed amount off the agreed price** or a **gift with purchase**, chosen by the shop. Sponsor-funded amounts are reimbursed to the shop by bank transfer and shown in the owner's monthly summary.
+
+## Web presentation layout
+On a desktop browser (≥ 900 px wide) the prototype shows **two phones**: the customer app on the left and the **shop owner's WhatsApp** (bot chat) on the right, sharing live state. On phones and narrow screens only the customer app is shown, with "Owner confirms (demo)" buttons instead.
+
+## Demo script (about 3 minutes, desktop web)
+1. Register, then code `1234`.
+2. **Explore**: tap a pin → *Meet the owner* → story preview → see the **taste and haggle** tips.
+3. **Scan** tab → *Visit* at a stall → +5 and a badge (owner's chat shows the visit).
+4. **Scan** → *Purchase* at the same stall → first time? → *Send to shop* → "Waiting for Abu Saeed".
+5. In the **owner's WhatsApp** (right): pick a price band (optional) → *Confirm sale* → customer sees "Purchase confirmed!".
+6. Demo tools → *Set Souq Week to 2/3* → one more purchase + confirm → Souq Week complete → AED 10 coupon.
+7. Purchase at another shop choosing the coupon → owner confirms → owner's chat says the sponsor reimburses AED 10.
+8. Reserve a **Souq Pick** → owner taps *Mark collected* → "You saved 2 kg of good food".
+9. Owner taps *Monthly summary*. Customer: **Profile / Impact**.
 
 ## Where things live
 | Path | What |

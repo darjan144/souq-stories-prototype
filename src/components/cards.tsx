@@ -92,11 +92,11 @@ export function CouponCard({ coupon, onPress }: { coupon: OwnedCoupon; onPress: 
   const redeemed = coupon.status === 'redeemed';
   return (
     <Card onPress={onPress} color={redeemed ? colors.sand : colors.brown} style={[styles.row, { opacity: redeemed ? 0.7 : 1 }]}>
-      <IconCircle icon={redeemed ? 'check' : 'ticket-percent'} color={redeemed ? colors.muted : colors.saffron} />
+      <IconCircle icon={redeemed ? 'check' : tpl.kind === 'gift' ? 'gift-outline' : 'ticket-percent'} color={redeemed ? colors.muted : colors.saffron} />
       <View style={{ flex: 1, gap: 2 }}>
         <Text style={[type.h3, { color: redeemed ? colors.brown : colors.white }]}>{tpl.title}</Text>
         <Text style={[type.small, { color: redeemed ? colors.muted : colors.sandDark }]}>
-          {redeemed ? 'Redeemed' : `${t.coupon.fundedBy} ${tpl.funderName}`}
+          {redeemed ? 'Redeemed' : coupon.status === 'pending' ? t.wallet.pending : tpl.kind === 'gift' ? t.coupon.gift : t.coupon.amountOff(tpl.value ?? 0)}
         </Text>
       </View>
       <Icon name="chevron-right" color={redeemed ? colors.muted : colors.white} />

@@ -7,18 +7,13 @@ import { Card, Icon, SectionTitle } from '@/components/ui';
 import { categories } from '@/data/categories';
 import { getShop } from '@/data/shops';
 import { impactOf } from '@/game/rules';
-import { useAuth } from '@/store/useAuth';
-import { useGame } from '@/store/useGame';
+import { useSnapshot } from '@/store/useGame';
 import { t } from '@/strings';
 import { colors, fonts, space, type } from '@/theme';
 
 export default function Impact() {
   const router = useRouter();
-  const household = useAuth((s) => s.account?.household);
-  const checkIns = useGame((s) => s.checkIns);
-  const reservations = useGame((s) => s.reservations);
-  const storyCards = useGame((s) => s.storyCards);
-  const imp = impactOf({ checkIns, reservations, storyCards, household });
+  const imp = impactOf(useSnapshot());
 
   return (
     <Screen>
@@ -28,13 +23,18 @@ export default function Impact() {
       </Card>
 
       <View style={styles.grid}>
+        <StatTile value={imp.purchases} label={t.impact.purchases} icon="shopping-outline" color={colors.terracotta} />
         <StatTile value={imp.shopsSupported} label={t.impact.shops} icon="storefront-outline" color={colors.teal} />
+        <StatTile value={imp.newShopsTried} label={t.impact.newShops} icon="star-circle" color={colors.saffron} />
         <StatTile value={imp.kgSaved} label={t.impact.kg} icon="leaf" color={colors.olive} />
-        <StatTile value={`${imp.seasonalShare}%`} label={t.impact.seasonal} icon="sprout" color={colors.saffron} />
-        <StatTile value={imp.visits} label={t.impact.visits} icon="qrcode-scan" color={colors.terracotta} />
-        <StatTile value={imp.localSpend} label={t.impact.local} icon="cash" color={colors.spice} />
+        <StatTile value={`${imp.seasonalShare}%`} label={t.impact.seasonal} icon="sprout" color={colors.olive} />
+        <StatTile value={imp.visits} label={t.impact.visits} icon="qrcode-scan" color={colors.teal} />
+        <StatTile value={imp.estimatedSpend} label={t.impact.local} icon="cash" color={colors.spice} />
         <StatTile value={`${imp.stories}/${imp.totalShops}`} label={t.impact.stories} icon="cards-outline" color="#7A5C8C" />
       </View>
+      {imp.purchases ? (
+        <Text style={[type.small, { textAlign: 'center' }]}>Spend is estimated from the optional price ranges owners choose ({imp.bandCoverage}% of your purchases have one).</Text>
+      ) : null}
 
       {imp.supportedShopIds.length ? (
         <>
@@ -54,7 +54,7 @@ export default function Impact() {
           </View>
         </>
       ) : (
-        <Text style={[type.small, { marginTop: space.xl, textAlign: 'center' }]}>Check in at a shop or collect a Souq Pick to start your impact story.</Text>
+        <Text style={[type.small, { marginTop: space.xl, textAlign: 'center' }]}>Buy something at a shop or collect a Souq Pick to start your impact story.</Text>
       )}
     </Screen>
   );

@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { StatTile } from '@/components/cards';
 import { Screen } from '@/components/Screen';
-import { Button, Card, Chip, Icon, SectionTitle } from '@/components/ui';
+import { Card, Chip, Icon, SectionTitle } from '@/components/ui';
 import { shopStats } from '@/data/content';
 import { shops } from '@/data/shops';
 import { t } from '@/strings';
@@ -13,7 +13,7 @@ const WA_GREEN = '#25D366';
 
 export default function ShopDashboard() {
   const [shopId, setShopId] = useState('produce');
-  const [posted, setPosted] = useState(false);
+
   const shop = shops.find((s) => s.id === shopId)!;
   const max = Math.max(...shopStats.weeklyVisits.map((w) => w.visits));
   const before = shopStats.weeklyVisits.slice(0, 4).reduce((a, w) => a + w.visits, 0) / 4;
@@ -25,7 +25,7 @@ export default function ShopDashboard() {
       <Text style={type.small}>{t.dashboard.subtitle}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: space.sm, paddingVertical: space.md }}>
         {shops.map((s) => (
-          <Chip key={s.id} label={s.name} selected={s.id === shopId} onPress={() => { setShopId(s.id); setPosted(false); }} />
+          <Chip key={s.id} label={s.name} selected={s.id === shopId} onPress={() => setShopId(s.id)} />
         ))}
       </ScrollView>
 
@@ -55,20 +55,9 @@ export default function ShopDashboard() {
         ))}
       </View>
 
-      <SectionTitle title={t.dashboard.post} />
-      <Card style={{ gap: space.md, backgroundColor: '#ECE5DD' }}>
-        <Text style={type.small}>{t.dashboard.postBody}</Text>
-        <View style={[styles.bubble, styles.out]}>
-          <Icon name="camera" color={colors.muted} size={18} />
-          <Text style={type.body}>[photo] 3 kg naturally shaped tomatoes, AED 8, pickup until 9pm</Text>
-        </View>
-        {posted ? (
-          <View style={[styles.bubble, styles.in]}>
-            <Text style={[type.body, { fontWeight: '700' }]}>Souq Stories</Text>
-            <Text style={type.body}>Your Souq Pick is live: "Naturally shaped tomatoes, 3 kg · AED 8 · until 21:00". 214 people nearby will see it.</Text>
-          </View>
-        ) : null}
-        {!posted ? <Button title={t.dashboard.postCta} icon="whatsapp" style={{ backgroundColor: WA_GREEN }} onPress={() => setPosted(true)} /> : null}
+      <Card color="#E7F8EE" style={{ flexDirection: 'row', gap: space.md, alignItems: 'center' }}>
+        <Icon name="whatsapp" size={26} color={WA_GREEN} />
+        <Text style={[type.body, { flex: 1 }]}>{t.dashboard.whatsapp}</Text>
       </Card>
     </Screen>
   );

@@ -37,7 +37,8 @@ export type SouqPick = {
   left: number;
 };
 
-export type ChallengeKind = 'distinctShops' | 'picks' | 'seasonalShops' | 'comingSoon';
+/** Purchase-based kinds can carry coupons; visit-based kinds give points only. */
+export type ChallengeKind = 'distinctShopPurchases' | 'picks' | 'seasonalPurchases' | 'distinctShopVisits' | 'comingSoon';
 
 export type Challenge = {
   id: string;
@@ -54,18 +55,28 @@ export type Challenge = {
 };
 
 export type BadgeRule =
-  | { type: 'checkinAt'; shopId: string }
-  | { type: 'distinctShops'; count: number }
+  | { type: 'visitAt'; shopId: string }
+  | { type: 'distinctVisits'; count: number }
+  | { type: 'purchases'; count: number }
   | { type: 'picks'; count: number }
-  | { type: 'householdCheckins'; count: number };
+  | { type: 'householdPurchases'; count: number };
 
 export type Badge = { id: string; name: string; description: string; icon: string; color: string; rule: BadgeRule };
 
+/**
+ * Prices are haggled, so rewards are never a percentage: either a fixed amount
+ * off the agreed price or a gift with purchase. Each shop chooses for its own
+ * coupons. Sponsor-funded amounts are reimbursed to the shop by bank transfer.
+ */
 export type CouponTemplate = {
   id: string;
   title: string;
   description: string;
+  kind: 'amountOff' | 'gift';
+  value?: number; // AED, for amountOff
   shopId?: string; // undefined = any partner shop
   fundedBy: 'shop' | 'sponsor';
   funderName: string;
 };
+
+export type PriceBand = 'under20' | '20to50' | '50to100' | 'over100';

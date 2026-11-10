@@ -1,5 +1,5 @@
 import { colors } from '@/theme';
-import type { Badge, Challenge, CouponTemplate, SouqPick } from './types';
+import type { Badge, Challenge, CouponTemplate, PriceBand, SouqPick } from './types';
 
 export const picks: SouqPick[] = [
   { id: 'p-dates-1', shopId: 'dates', title: 'Mixed Khalas box, 1 kg', type: 'evening', price: 18, usualPrice: 30, kg: 1, pickupWindow: '19:00 – 21:30', left: 4 },
@@ -14,11 +14,54 @@ export const picks: SouqPick[] = [
 export const getPick = (id: string) => picks.find((p) => p.id === id);
 export const picksForShop = (shopId: string) => picks.filter((p) => p.shopId === shopId);
 
+/** Optional price band the owner picks when confirming a sale (prices are haggled). */
+export const PRICE_BANDS: { id: PriceBand; label: string; mid: number }[] = [
+  { id: 'under20', label: 'Under AED 20', mid: 12 },
+  { id: '20to50', label: 'AED 20–50', mid: 35 },
+  { id: '50to100', label: 'AED 50–100', mid: 75 },
+  { id: 'over100', label: 'AED 100+', mid: 120 },
+];
+export const bandLabel = (b?: PriceBand) => PRICE_BANDS.find((x) => x.id === b)?.label;
+
+// Coupons come only from confirmed purchases. Shops decide gift vs amount off.
 export const couponTemplates: CouponTemplate[] = [
-  { id: 'souq-week-aed10', title: 'AED 10 off your basket', description: 'Reward for completing Souq Week. Minimum spend AED 30.', fundedBy: 'sponsor', funderName: 'Sustainability sponsor (example)' },
-  { id: 'green-basket-10', title: '10% off at Green Basket Stall', description: 'Reward for being a Food Saver.', shopId: 'produce', fundedBy: 'shop', funderName: 'Green Basket Stall' },
-  { id: 'honey-15', title: '15% off new-harvest sidr honey', description: 'Reward for Seasonal Shopper.', shopId: 'honey', fundedBy: 'shop', funderName: 'Hajar Mountain Honey' },
-  { id: 'points-aed5', title: 'AED 5 voucher', description: 'Converted from 100 points. Use at any partner shop.', fundedBy: 'sponsor', funderName: 'Souq Stories rewards pool' },
+  {
+    id: 'souq-week-aed10',
+    title: 'AED 10 off your next purchase',
+    description: 'Reward for Souq Week. Agree your price first, then AED 10 comes off. Any partner shop.',
+    kind: 'amountOff',
+    value: 10,
+    fundedBy: 'sponsor',
+    funderName: 'Sustainability sponsor (example)',
+  },
+  {
+    id: 'green-basket-herbs',
+    title: 'Free bunch of fresh herbs',
+    description: 'Reward for Food Saver. A gift from Joseph and Salem with your next purchase.',
+    kind: 'gift',
+    shopId: 'produce',
+    fundedBy: 'shop',
+    funderName: 'Green Basket Stall',
+  },
+  {
+    id: 'honey-aed15',
+    title: 'AED 15 off new-harvest sidr honey',
+    description: 'Reward for Seasonal Shopper. Comes off the price you agree with Ahmed.',
+    kind: 'amountOff',
+    value: 15,
+    shopId: 'honey',
+    fundedBy: 'shop',
+    funderName: 'Hajar Mountain Honey',
+  },
+  {
+    id: 'points-aed5',
+    title: 'AED 5 voucher',
+    description: 'Converted from 100 points. Use with a purchase at any partner shop.',
+    kind: 'amountOff',
+    value: 5,
+    fundedBy: 'sponsor',
+    funderName: 'Souq Stories rewards pool',
+  },
 ];
 
 export const getCouponTemplate = (id: string) => couponTemplates.find((c) => c.id === id);
@@ -27,15 +70,15 @@ export const challenges: Challenge[] = [
   {
     id: 'souq-week',
     title: 'Souq Week',
-    description: 'Check in at 3 different local shops within 7 days.',
+    description: 'Buy from 3 different local shops within 7 days.',
     icon: 'calendar-week',
-    kind: 'distinctShops',
+    kind: 'distinctShopPurchases',
     target: 3,
     days: 7,
     rewardPoints: 50,
     rewardCouponId: 'souq-week-aed10',
     fundedBy: 'sponsor',
-    steps: ['Pick shops on the map', 'Scan the QR code at each stall', 'Three different shops in a week completes it'],
+    steps: ['Taste, haggle and agree a price', 'Scan the shop’s purchase QR at the counter', 'The owner confirms on WhatsApp, and it counts'],
   },
   {
     id: 'food-saver',
@@ -45,22 +88,34 @@ export const challenges: Challenge[] = [
     kind: 'picks',
     target: 2,
     rewardPoints: 50,
-    rewardCouponId: 'green-basket-10',
+    rewardCouponId: 'green-basket-herbs',
     fundedBy: 'shop',
-    steps: ['Reserve a Souq Pick in any shop', 'Pick it up at the stall', 'The owner confirms, and it counts'],
+    steps: ['Reserve a Souq Pick in any shop', 'Pick it up at the stall', 'The owner marks it collected on WhatsApp'],
   },
   {
     id: 'seasonal-shopper',
     title: 'Seasonal Shopper',
-    description: 'Visit 3 shops selling what is in season right now: dates, fish, vegetables or honey.',
+    description: 'Buy from 3 shops selling what is in season: dates, fish, vegetables or honey.',
     icon: 'sprout',
-    kind: 'seasonalShops',
+    kind: 'seasonalPurchases',
     target: 3,
     days: 30,
     rewardPoints: 50,
-    rewardCouponId: 'honey-15',
+    rewardCouponId: 'honey-aed15',
     fundedBy: 'shop',
-    steps: ['Read "In season now" on a shop’s story', 'Check in at seasonal shops', 'Three seasonal shops this month completes it'],
+    steps: ['Read "In season now" on a shop’s story', 'Buy from seasonal shops', 'Three confirmed seasonal purchases this month completes it'],
+  },
+  {
+    id: 'souq-explorer',
+    title: 'Souq Explorer',
+    description: 'Visit 5 different stalls and meet the people behind them.',
+    icon: 'compass-outline',
+    kind: 'distinctShopVisits',
+    target: 5,
+    days: 30,
+    rewardPoints: 30,
+    fundedBy: 'sponsor',
+    steps: ['Walk the souq and say hello', 'Scan the visit QR at the front of each stall', 'Five different stalls completes it (points only)'],
   },
   {
     id: 'conscious-ramadan',
@@ -78,12 +133,12 @@ export const challenges: Challenge[] = [
 export const getChallenge = (id: string) => challenges.find((c) => c.id === id);
 
 export const badges: Badge[] = [
-  { id: 'date-explorer', name: 'Date Explorer', description: 'Checked in at Al Dhaid Date House', icon: 'palm-tree', color: colors.spice, rule: { type: 'checkinAt', shopId: 'dates' } },
-  { id: 'fresh-catch', name: 'Fresh Catch', description: 'Checked in at Khor Fakkan Catch', icon: 'fish', color: colors.teal, rule: { type: 'checkinAt', shopId: 'fish' } },
-  { id: 'spice-route', name: 'Spice Route', description: 'Checked in at Spice Route Corner', icon: 'shaker-outline', color: colors.terracotta, rule: { type: 'checkinAt', shopId: 'spices' } },
-  { id: 'food-saver', name: 'Food Saver', description: 'Collected 2 Souq Picks', icon: 'basket-check', color: colors.olive, rule: { type: 'picks', count: 2 } },
-  { id: 'souq-regular', name: 'Souq Regular', description: 'Visited 5 different shops', icon: 'storefront-outline', color: colors.saffron, rule: { type: 'distinctShops', count: 5 } },
-  { id: 'family-team', name: 'Family Team', description: '3 check-ins in family mode', icon: 'home-heart', color: '#7A5C8C', rule: { type: 'householdCheckins', count: 3 } },
+  { id: 'date-explorer', name: 'Date Explorer', description: 'Visited Al Dhaid Date House', icon: 'palm-tree', color: colors.spice, rule: { type: 'visitAt', shopId: 'dates' } },
+  { id: 'fresh-catch', name: 'Fresh Catch', description: 'Visited Khor Fakkan Catch', icon: 'fish', color: colors.teal, rule: { type: 'visitAt', shopId: 'fish' } },
+  { id: 'spice-route', name: 'Spice Route', description: 'Visited Spice Route Corner', icon: 'shaker-outline', color: colors.terracotta, rule: { type: 'visitAt', shopId: 'spices' } },
+  { id: 'first-buy', name: 'Souq Shopper', description: 'First confirmed purchase', icon: 'shopping-outline', color: colors.olive, rule: { type: 'purchases', count: 1 } },
+  { id: 'souq-regular', name: 'Souq Regular', description: 'Visited 5 different stalls', icon: 'storefront-outline', color: colors.saffron, rule: { type: 'distinctVisits', count: 5 } },
+  { id: 'family-team', name: 'Family Team', description: '3 purchases in family mode', icon: 'home-heart', color: '#7A5C8C', rule: { type: 'householdPurchases', count: 3 } },
 ];
 
 export const getBadge = (id: string) => badges.find((b) => b.id === id);
@@ -110,10 +165,10 @@ export const shopStats = {
   ],
   tiles: [
     { label: 'Profile views', value: '1,240', icon: 'eye' },
-    { label: 'Story views', value: '860', icon: 'play-circle' },
     { label: 'QR-verified visits', value: '212', icon: 'qrcode-scan' },
+    { label: 'Confirmed app sales', value: '146', icon: 'shopping-outline' },
+    { label: 'New customers', value: '58%', icon: 'account-plus' },
     { label: 'Souq Picks collected', value: '64', icon: 'basket-check' },
-    { label: 'Coupons redeemed', value: '38', icon: 'ticket-percent-outline' },
     { label: 'Repeat customers', value: '41%', icon: 'account-heart' },
   ],
 };

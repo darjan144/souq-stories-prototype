@@ -2,6 +2,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { PickCard } from '@/components/cards';
+import { SouqTips } from '@/components/SouqTips';
 import { StoryVideo } from '@/components/StoryVideo';
 import { Button, Card, Chip, Icon, IconCircle, Tag } from '@/components/ui';
 import { categories } from '@/data/categories';
@@ -29,7 +30,7 @@ export default function ShopScreen() {
   }
   const cat = categories[shop.category];
   const shopPicks = picksForShop(shop.id);
-  const badge = badges.find((b) => b.rule.type === 'checkinAt' && b.rule.shopId === shop.id);
+  const badge = badges.find((b) => b.rule.type === 'visitAt' && b.rule.shopId === shop.id);
 
   const onWatched = () => {
     if (collectStory(shop.id)) {
@@ -74,6 +75,10 @@ export default function ShopScreen() {
             ))}
           </View>
 
+          <View style={{ marginTop: space.xl }}>
+            <SouqTips owner={shop.owner} />
+          </View>
+
           <Card color={colors.sand} style={styles.tip}>
             <Icon name="lightbulb-on-outline" size={24} color={colors.saffron} />
             <View style={{ flex: 1, gap: 2 }}>
@@ -97,7 +102,7 @@ export default function ShopScreen() {
             <View style={{ flexDirection: 'row', gap: space.md, alignItems: 'center' }}>
               <IconCircle icon={visitedToday ? 'check' : 'qrcode-scan'} color={visitedToday ? colors.success : colors.terracotta} />
               <View style={{ flex: 1 }}>
-                <Text style={[type.h3, { color: colors.white }]}>{visitedToday ? 'Checked in today' : t.shop.checkInTitle}</Text>
+                <Text style={[type.h3, { color: colors.white }]}>{visitedToday ? 'Visited today' : t.shop.checkInTitle}</Text>
                 <Text style={[type.small, { color: colors.sandDark }]}>{t.shop.checkInBody}</Text>
               </View>
             </View>
@@ -106,7 +111,7 @@ export default function ShopScreen() {
                 <Icon name="medal" size={14} color={colors.saffron} /> {t.shop.badgeHint(badge.name)}
               </Text>
             ) : null}
-            {!visitedToday ? <Button title={t.shop.checkInCta} icon="qrcode-scan" small onPress={() => router.navigate('/scan')} /> : null}
+            <Button title={t.shop.checkInCta} icon="qrcode-scan" small onPress={() => router.navigate('/scan')} />
           </Card>
         </View>
       </ScrollView>

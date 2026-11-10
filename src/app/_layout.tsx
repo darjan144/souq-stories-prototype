@@ -4,6 +4,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { PhoneFrame } from '@/components/PhoneFrame';
+import { RewardWatcher } from '@/components/RewardWatcher';
 import { Toast } from '@/components/Toast';
 import { useHydrated } from '@/store/useUI';
 import { colors, fonts } from '@/theme';
@@ -31,6 +32,8 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="shop/[id]" options={{ title: '' }} />
             <Stack.Screen name="pick/[id]" options={{ title: 'Souq Pick' }} />
+            <Stack.Screen name="purchase/[shopId]" options={{ title: 'Purchase' }} />
+            <Stack.Screen name="sale/[id]" options={{ title: 'Purchase' }} />
             <Stack.Screen name="coupon/[id]" options={{ title: 'Coupon' }} />
             <Stack.Screen name="challenge/[id]" options={{ title: 'Challenge' }} />
             <Stack.Screen name="reward" options={{ presentation: 'modal', headerShown: false }} />
@@ -40,6 +43,9 @@ export default function RootLayout() {
             <Stack.Screen name="qr-sheet" options={{ title: 'Shop QR codes' }} />
             <Stack.Screen name="about" options={{ title: 'About' }} />
           </Stack>
+        ) : null}
+        {hydrated ? (
+          <RewardWatcher />
         ) : (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <ActivityIndicator color={colors.terracotta} />

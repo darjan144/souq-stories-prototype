@@ -5,8 +5,7 @@ import { Screen } from '@/components/Screen';
 import { Button, Card, Icon, IconCircle, ProgressBar, Tag } from '@/components/ui';
 import { getChallenge, getCouponTemplate } from '@/data/content';
 import { challengeProgress } from '@/game/rules';
-import { useAuth } from '@/store/useAuth';
-import { useGame } from '@/store/useGame';
+import { useGame, useSnapshot } from '@/store/useGame';
 import { t } from '@/strings';
 import { colors, space, type } from '@/theme';
 
@@ -14,15 +13,12 @@ export default function ChallengeScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const ch = getChallenge(id);
-  const checkIns = useGame((s) => s.checkIns);
-  const reservations = useGame((s) => s.reservations);
-  const storyCards = useGame((s) => s.storyCards);
   const done = useGame((s) => s.completedChallenges.includes(id));
-  const household = useAuth((s) => s.account?.household);
+  const snap = useSnapshot();
 
   if (!ch) return <Screen><Text style={type.body}>Not found</Text></Screen>;
   const soon = ch.kind === 'comingSoon';
-  const value = done ? ch.target : challengeProgress(ch, { checkIns, reservations, storyCards, household });
+  const value = done ? ch.target : challengeProgress(ch, snap);
   const coupon = ch.rewardCouponId ? getCouponTemplate(ch.rewardCouponId) : undefined;
 
   return (

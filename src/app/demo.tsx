@@ -20,7 +20,7 @@ export default function Demo() {
       <View style={{ gap: space.md, marginTop: space.xl }}>
         <Card style={{ gap: space.sm }}>
           <Text style={type.h3}>Stage the Souq Week finale</Text>
-          <Text style={type.small}>Adds two check-ins from yesterday so the next scan completes Souq Week and unlocks a coupon.</Text>
+          <Text style={type.small}>Adds two confirmed purchases from yesterday, so the next confirmed purchase completes Souq Week and unlocks a coupon.</Text>
           <Button title="Set Souq Week to 2/3" small icon="calendar-week" onPress={() => { g.demoSouqWeekAlmost(); showToast('Souq Week is at 2/3', 'calendar-week'); }} />
         </Card>
         <Card style={{ gap: space.sm }}>

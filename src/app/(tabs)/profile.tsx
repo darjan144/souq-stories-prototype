@@ -7,7 +7,7 @@ import { Card, Icon, ProgressBar, SectionTitle } from '@/components/ui';
 import { badges, leaderboard } from '@/data/content';
 import { impactOf, levelFor } from '@/game/rules';
 import { useAuth } from '@/store/useAuth';
-import { useGame } from '@/store/useGame';
+import { useGame, useSnapshot } from '@/store/useGame';
 import { t } from '@/strings';
 import { colors, space, type } from '@/theme';
 
@@ -17,7 +17,7 @@ export default function Profile() {
   const signOut = useAuth((s) => s.signOut);
   const g = useGame();
   const lvl = levelFor(g.xp);
-  const imp = impactOf({ checkIns: g.checkIns, reservations: g.reservations, storyCards: g.storyCards, household: account?.household });
+  const imp = impactOf(useSnapshot());
   const initials = (account?.name ?? 'S').split(' ').map((p) => p[0]).join('').slice(0, 2).toUpperCase();
 
   const board = [...leaderboard, ...(account?.household ? [{ household: account.household, xp: g.xp, me: true }] : [])].sort((a, b) => b.xp - a.xp);

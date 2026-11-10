@@ -6,19 +6,14 @@ import { Screen } from '@/components/Screen';
 import { SectionTitle } from '@/components/ui';
 import { challenges } from '@/data/content';
 import { challengeProgress } from '@/game/rules';
-import { useAuth } from '@/store/useAuth';
-import { useGame } from '@/store/useGame';
+import { useGame, useSnapshot } from '@/store/useGame';
 import { t } from '@/strings';
 import { colors, space, type } from '@/theme';
 
 export default function Challenges() {
   const router = useRouter();
-  const checkIns = useGame((s) => s.checkIns);
-  const reservations = useGame((s) => s.reservations);
-  const storyCards = useGame((s) => s.storyCards);
   const completed = useGame((s) => s.completedChallenges);
-  const household = useAuth((s) => s.account?.household);
-  const snap = { checkIns, reservations, storyCards, household };
+  const snap = useSnapshot();
 
   const active = challenges.filter((c) => c.kind !== 'comingSoon' && !completed.includes(c.id));
   const done = challenges.filter((c) => completed.includes(c.id));

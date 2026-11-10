@@ -22,6 +22,7 @@ export default function Wallet() {
   const convertPoints = useGame((s) => s.convertPoints);
   const collectPick = useGame((s) => s.collectPick);
   const showToast = useUI((s) => s.showToast);
+  const ownerPanel = useUI((s) => s.ownerPanelVisible);
 
   return (
     <Screen edges={['top']}>
@@ -84,15 +85,12 @@ export default function Wallet() {
                   ) : (
                     <>
                       <Text style={type.small}>{t.wallet.readyAt(pick.pickupWindow)}</Text>
-                      <Button
-                        title={t.wallet.confirmPickup}
-                        variant="dark"
-                        small
-                        icon="whatsapp"
-                        onPress={() => {
-                          if (collectPick(r.id)) router.push('/reward');
-                        }}
-                      />
+                      <Text style={type.small}>{t.wallet.pickupHint}</Text>
+                      {ownerPanel ? (
+                        <Text style={[type.small, { color: colors.success, fontWeight: '700' }]}>{t.sale.ownerPanelHint}</Text>
+                      ) : (
+                        <Button title={t.wallet.confirmPickup} variant="dark" small icon="whatsapp" onPress={() => collectPick(r.id)} />
+                      )}
                     </>
                   )}
                 </Card>

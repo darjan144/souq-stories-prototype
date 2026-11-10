@@ -24,7 +24,7 @@ export default function Reward() {
   if (!reward) return <Redirect href="/explore" />;
   const shop = reward.shopId ? getShop(reward.shopId) : undefined;
   const already = reward.alreadyDone;
-  const title = already ? t.reward.already : reward.kind === 'collect' ? t.reward.collect : t.reward.checkin;
+  const title = already ? t.reward.already : reward.kind === 'collect' ? t.reward.collect : reward.kind === 'purchase' ? t.reward.purchase : t.reward.checkin;
 
   return (
     <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
@@ -37,6 +37,7 @@ export default function Reward() {
         <Text style={[type.h1, { color: colors.white, textAlign: 'center' }]}>{title}</Text>
         {shop ? <Text style={[type.body, { color: colors.sandDark, textAlign: 'center' }]}>{shop.name}</Text> : null}
         {already ? <Text style={[type.body, { color: colors.sand, textAlign: 'center' }]}>{t.reward.alreadyBody}</Text> : null}
+        {reward.newShop ? <Text style={[type.small, { color: colors.saffron, textAlign: 'center', fontWeight: '700' }]}>{t.reward.newShop}</Text> : null}
         {reward.kind === 'collect' && reward.kgSaved ? (
           <Text style={[type.h3, { color: colors.saffron, textAlign: 'center' }]}>You saved {reward.kgSaved} kg of good food</Text>
         ) : null}
